@@ -17,8 +17,11 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Наименование", help_text="Введите наименование продукта")
-    description = models.TextField(verbose_name="Описание", help_text="Введите описание продукта")
+    name = models.CharField(max_length=100,
+                            verbose_name="Наименование",
+                            help_text="Введите наименование категории продуктов")
+    description = models.TextField(verbose_name="Описание",
+                                   help_text="Введите описание категории")
     photo = models.ImageField(
         upload_to="catalog/photo",
         blank=True,
@@ -26,16 +29,17 @@ class Product(models.Model):
         verbose_name="Фото",
         help_text="Загрузите фотографию продукта",
     )
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, verbose_name="Категория", help_text="Введите категорию продукта"
+    category = models.ForeignKey(Category, on_delete=models.CASCADE,
+                                 verbose_name="Категория",
+                                 help_text="Введите категорию продукта"
     )
-    price = models.FloatField(verbose_name="Цена за покупку", help_text="Введите стоимость продукта")
-    created_at = models.DateTimeField(
-        auto_now_add=True, verbose_name="Дата создания", help_text="Введите дату создания продукта"
-    )
-    updated_at = models.DateTimeField(
-        auto_now=True, verbose_name="Дата последнего изменения", help_text="Введите дату последнего изменения продукта"
-    )
+    price = models.FloatField(verbose_name="Цена за покупку",
+                              help_text="Введите стоимость продукта")
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      verbose_name="Дата создания",
+                                      help_text="Введите дату создания продукта")
+    updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата последнего изменения",
+                                      help_text="Введите дату последнего изменения продукта")
 
     class Meta:
         verbose_name = "Продукт"
