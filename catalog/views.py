@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.contrib import messages
 
+
 def home(request):
     return render(request, 'home.html')
+
 
 def contact_view(request):
     if request.method == "POST":
