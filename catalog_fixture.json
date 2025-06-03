@@ -49,6 +49,7 @@
         "updated_at": "2025-06-03T20:03:20.286Z"
     }
 },
+
 {
     "model": "catalog.product",
     "pk": 10,
