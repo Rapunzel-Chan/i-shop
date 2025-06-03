@@ -27,12 +27,10 @@ class Product(models.Model):
         blank=True,
         null=True,
         verbose_name="Фото",
-        help_text="Загрузите фотографию продукта",
-    )
+        help_text="Загрузите фотографию продукта")
     category = models.ForeignKey(Category, on_delete=models.CASCADE,
                                  verbose_name="Категория",
-                                 help_text="Введите категорию продукта"
-    )
+                                 help_text="Введите категорию продукта")
     price = models.FloatField(verbose_name="Цена за покупку",
                               help_text="Введите стоимость продукта")
     created_at = models.DateTimeField(auto_now_add=True,
@@ -48,3 +46,16 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Contact(models.Model):
+    country = models.CharField("Страна", max_length=100)
+    inn = models.CharField("ИНН", max_length=20)
+    address = models.CharField("Адрес", max_length=255)
+
+    class Meta:
+        verbose_name = "Контакт"
+        verbose_name_plural = "Контактные данные"
+
+    def __str__(self):
+        return f"{self.country}, {self.address}"
