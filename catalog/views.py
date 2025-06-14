@@ -4,6 +4,9 @@ from django.shortcuts import redirect, render
 from catalog.models import Contact, Product
 
 
+def index(request):
+    return render(request, 'base.html')
+
 def home(request):
     latest_products = Product.objects.all().order_by("-created_at")[:5]
     return render(request, "home.html", {"latest_products": latest_products})
