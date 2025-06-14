@@ -142,11 +142,11 @@
         <section class="py-5 text-center container">
             <div class="row py-lg-5">
                 <div class="col-lg-6 col-md-8 mx-auto">
-                    <h1 class="fw-light">Album example</h1>
-                    <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
+                    <h1 class="fw-light">Продуктовый рай</h1>
+                    <p class="lead text-body-secondary">Магазин натуральных продуктов! Попробуй, не пожалеешь!</p>
                     <p>
-                        <a href="#" class="btn btn-primary my-2">Main call to action</a>
-                        <a href="#" class="btn btn-secondary my-2">Secondary action</a>
+                        <a href="#" class="btn btn-primary my-2">Выбор по категории</a>
+                        <a href="#" class="btn btn-secondary my-2">Поиск</a>
                     </p>
                 </div>
             </div>
@@ -155,14 +155,37 @@
 {% endblock %}
 
     </main>
-    <footer class="text-body-secondary py-5">
-        <div class="container">
-            <p class="float-end mb-1">
-                <a href="#">Back to top</a>
-            </p>
-            <p class="mb-1">Album example is &copy; Bootstrap, but please download and customize it for yourself!</p>
-            <p class="mb-0">New to Bootstrap? <a href="/">Visit the homepage</a> or read our <a href="/docs/5.3/getting-started/introduction">getting started guide</a>.</p>
+    <footer class="py-4 bg-light border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4">
+            <h5>I-SHOP</h5>
+            <small class="d-block mb-3 text-muted">&copy; 2025</small>
+          </div>
+          <div class="col-md-2">
+            <h5>Категории</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="#">Овощи</a></li>
+              <li><a class="text-muted" href="#">Фрукты</a></li>
+              <li><a class="text-muted" href="#">Орехи</a></li>
+              <li><a class="text-muted" href="#">Зелень</a></li>
+              <li><a class="text-muted" href="#">Микрозелень</a></li>
+            </ul>
+          </div>
+          <div class="col-md-2">
+            <h5>Дополнительно</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="#">Мы пишем</a></li>
+            </ul>
+          </div>
+          <div class="col-md-2">
+            <h5>О нас</h5>
+            <ul class="list-unstyled text-small">
+              <li><a class="text-muted" href="/contacts/">Контакты</a></li>
+            </ul>
+          </div>
         </div>
+      </div>
     </footer>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
