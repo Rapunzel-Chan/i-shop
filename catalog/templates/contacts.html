@@ -32,15 +32,15 @@
                     <table class="table table-striped">
                         <tr>
                             <td class="w-25">Страна</td>
-                            <td>USA</td>
+                            <td>{{ contact.country }}</td>
                         </tr>
                         <tr>
                             <td class="w-25">ИНН</td>
-                            <td>91-1144442</td>
+                            <td>{{ contact.inn }}</td>
                         </tr>
                         <tr>
                             <td class="w-25">Адрес</td>
-                            <td>Redmond, WA, 98052-6399</td>
+                            <td>{{ contact.address }}</td>
                         </tr>
                     </table>
                 </div>
@@ -64,7 +64,7 @@
                     {% endif %}
 
 
-                    <form method="post" action="/contacts/" id="contact-form">
+                    <form method="post" action="{% url 'catalog:contacts' %}">
                         {% csrf_token %}
                         <div class="mb-3">
                             <label for="name">Имя</label>
