@@ -1,13 +1,12 @@
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, redirect, render
-
+from django.shortcuts import redirect
 from catalog.models import Contact, Product
+from catalog.forms import ProductForm
 
-from .forms import ProductForm
 
 class ProductListView(ListView):
     model = Product
@@ -17,8 +16,10 @@ class ProductDetailView(DetailView):
     model = Product
 
 
-# class ProductDetailView(DetailView):
-#     model = Product
+class ProductCreateView(CreateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('catalog:products_list')
 
 
 
@@ -56,28 +57,3 @@ class ContactsView(TemplateView):
             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
 
         return redirect(reverse_lazy("catalog:contacts"))
-
-
-# def contacts_view(request):
-#     contact = Contact.objects.first()
-#
-#     if request.method == "POST":
-#         name = request.POST.get("name")
-#         phone = request.POST.get("phone")
-#         message = request.POST.get("message")
-#         if name and phone and message:
-#             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
-#         return redirect("catalog:contacts")
-#
-#     return render(request, "contacts.html", {"contact": contact})
-
-
-def add_product(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('catalog:products_list')  # Заменить на нужную страницу
-    else:
-        form = ProductForm()
-    return render(request, 'add_product.html', {'form': form})
