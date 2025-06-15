@@ -2,7 +2,7 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from catalog.models import Contact, Product
 from catalog.forms import ProductForm
@@ -10,6 +10,12 @@ from catalog.forms import ProductForm
 
 class ProductListView(ListView):
     model = Product
+    paginate_by = 3
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_obj'] = context['page_obj']
+        return context
 
 
 class ProductDetailView(DetailView):
