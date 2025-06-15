@@ -1,3 +1,5 @@
+from django.views.generic import ListView, DetailView
+
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
@@ -6,21 +8,24 @@ from catalog.models import Contact, Product
 
 from .forms import ProductForm
 
-
-def products_list(request):
-    products = Product.objects.all()
-    paginator = Paginator(products, 3)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {"page_obj": page_obj}
-
-    return render(request, 'products_list.html', context)
+class ProductListView(ListView):
+    model = Product
 
 
-def products_detail(request, pk):
-    product = get_object_or_404(Product, pk=pk)
-    context = {"product": product}
-    return render(request, 'products_detail.html', context)
+class ProductDetailView(DetailView):
+    model = Product
+
+
+
+# def products_list(request):
+#     catalog = Product.objects.all()
+#     paginator = Paginator(catalog, 3)
+#     page_number = request.GET.get('page')
+#     page_obj = paginator.get_page(page_number)
+#     context = {"page_obj": page_obj}
+#
+#     return render(request, 'products_list.html', context)
+
 
 
 def home(request):
