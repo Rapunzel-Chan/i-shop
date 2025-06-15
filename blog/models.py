@@ -28,10 +28,10 @@ class Blog(models.Model):
         verbose_name="Опубликовано",
         help_text="Укажите, опубликован ли блог"
     )
-    views_count = models.PositiveIntegerField(
+    views_counter = models.PositiveIntegerField(
         default=0,
-        verbose_name="Количество просмотров",
-        help_text="Количество просмотров блога"
+        verbose_name="Счетчик просмотров",
+        help_text="Укажите количество просмотров блога"
     )
 
     class Meta:
