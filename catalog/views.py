@@ -1,5 +1,6 @@
 from django.views.generic import ListView, DetailView
-
+from django.views.generic.base import TemplateView
+from django.urls import reverse_lazy
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,6 +17,10 @@ class ProductDetailView(DetailView):
     model = Product
 
 
+# class ProductDetailView(DetailView):
+#     model = Product
+
+
 
 # def products_list(request):
 #     catalog = Product.objects.all()
@@ -27,24 +32,44 @@ class ProductDetailView(DetailView):
 #     return render(request, 'products_list.html', context)
 
 
+# def home(request):
+#     latest_products = Product.objects.all().order_by("-created_at")[:5]
+#     return render(request, "home.html", {"latest_products": latest_products})
 
-def home(request):
-    latest_products = Product.objects.all().order_by("-created_at")[:5]
-    return render(request, "home.html", {"latest_products": latest_products})
 
+class ContactsView(TemplateView):
+    template_name = 'catalog/contacts.html'
 
-def contacts_view(request):
-    contact = Contact.objects.first()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        contact = Contact.objects.first()
+        context['contact'] = contact
+        return context
 
-    if request.method == "POST":
+    def post(self, request, *args, **kwargs):
+
         name = request.POST.get("name")
-        phone = request.POST.get("phone")
         message = request.POST.get("message")
+        phone = request.POST.get("phone")
+
         if name and phone and message:
             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
-        return redirect("catalog:contacts")
 
-    return render(request, "contacts.html", {"contact": contact})
+        return redirect(reverse_lazy("catalog:contacts"))
+
+
+# def contacts_view(request):
+#     contact = Contact.objects.first()
+#
+#     if request.method == "POST":
+#         name = request.POST.get("name")
+#         phone = request.POST.get("phone")
+#         message = request.POST.get("message")
+#         if name and phone and message:
+#             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
+#         return redirect("catalog:contacts")
+#
+#     return render(request, "contacts.html", {"contact": contact})
 
 
 def add_product(request):
