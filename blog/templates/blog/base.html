@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Блог о китайской еде{% endblock %}</title>
+    <script src="{% static 'js/color-modes.js' %}"></script>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        .bd-placeholder-img { font-size: 1.125rem; user-select: none; }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg { font-size: 3.5rem; }
+        }
+        .nav-scroller { position: relative; z-index: 2; height: 2.75rem; overflow-y: hidden; }
+        .nav-scroller .nav { display: flex; flex-wrap: nowrap; padding-bottom: 1rem; margin-top: -1px; overflow-x: auto; text-align: center; white-space: nowrap; }
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9; --bd-violet-rgb: 112.52,44.06,249.44;
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: #fff;
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-active-bg: #5a23c8;
+        }
+        .bd-mode-toggle { z-index: 1500; }
+        .bd-mode-toggle .bi { width: 1em; height: 1em; }
+    </style>
+</head>
+<body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+        <!-- SVG symbols here, как у вас -->
+    </svg>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+                id="bd-theme" type="button" data-bs-toggle="dropdown" aria-label="Toggle theme">
+            <svg class="bi my-1 theme-icon-active"><use href="#circle-half"></use></svg>
+            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="light">
+                    <svg class="bi me-2 opacity-50"><use href="#sun-fill"></use></svg>
+                    Light
+                    <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center"
+                        data-bs-theme-value="dark">
+                    <svg class="bi me-2 opacity-50"><use href="#moon-stars-fill"></use></svg>
+                    Dark
+                    <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+            </li>
+            <li>
+                <button type="button" class="dropdown-item d-flex align-items-center active"
+                        data-bs-theme-value="auto">
+                    <svg class="bi me-2 opacity-50"><use href="#circle-half"></use></svg>
+                    Auto
+                    <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Общий навбар -->
+    <header data-bs-theme="dark">
+        {% include 'blog/includes/inc_menu.html' %}
+    </header>
+
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-light">Блог о китайской еде и не только</h1>
+                    <p class="lead text-body-secondary">Здесь вы найдёте рецепты и погрузитесь в истории вкуса.</p>
+                    <p>
+                        <a href="{% url 'blog:blog_list' %}" class="btn btn-primary my-2">Все записи</a>
+                        <a href="{% url 'catalog:products_list' %}" class="btn btn-secondary my-2">Вернуться в магазин</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="py-4 bg-light border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>I-SHOP</h5>
+                    <small class="d-block mb-3 text-muted">&copy; 2025</small>
+                </div>
+                <div class="col-md-2">
+                    <h5>Блог</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a href="{% url 'blog:blog_create' %}" class="link-secondary">Создать пост</a></li>
+                        <li><a href="{% url 'blog:blog_list' %}" class="link-secondary">Все записи</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5>Каталог</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a href="{% url 'catalog:products_list' %}" class="link-secondary">Каталог продуктов</a></li>
+                        <li><a href="{% url 'catalog:products_create' %}" class="link-secondary">Добавить товар</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h5>О нас</h5>
+                    <ul class="list-unstyled text-small">
+                        <li><a href="{% url 'catalog:contacts' %}" class="link-secondary">Контакты</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

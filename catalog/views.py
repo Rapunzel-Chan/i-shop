@@ -25,13 +25,13 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy('blog:products_list')
 
 
 
 # def products_list(request):
-#     catalog = Product.objects.all()
-#     paginator = Paginator(catalog, 3)
+#     blog = Product.objects.all()
+#     paginator = Paginator(blog, 3)
 #     page_number = request.GET.get('page')
 #     page_obj = paginator.get_page(page_number)
 #     context = {"page_obj": page_obj}
@@ -45,7 +45,7 @@ class ProductCreateView(CreateView):
 
 
 class ContactsView(TemplateView):
-    template_name = 'catalog/contacts.html'
+    template_name = 'blog/contacts.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -62,4 +62,4 @@ class ContactsView(TemplateView):
         if name and phone and message:
             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
 
-        return redirect(reverse_lazy("catalog:contacts"))
+        return redirect(reverse_lazy("blog:contacts"))

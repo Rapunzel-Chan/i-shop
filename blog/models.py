@@ -30,7 +30,7 @@ class Blog(models.Model):
     )
     views_counter = models.PositiveIntegerField(
         default=0,
-        verbose_name="Счетчик просмотров",
+        verbose_name="Счетчик просмотров постов",
         help_text="Укажите количество просмотров блога"
     )
 
