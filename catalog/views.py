@@ -1,8 +1,8 @@
-from django.views.generic import ListView, DetailView, CreateView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.views.generic.base import TemplateView
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from catalog.models import Contact, Product
 from catalog.forms import ProductForm
@@ -10,11 +10,11 @@ from catalog.forms import ProductForm
 
 class ProductListView(ListView):
     model = Product
+    # context_object_name = 'products'
     paginate_by = 3
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_obj'] = context['page_obj']
         return context
 
 
@@ -27,6 +27,11 @@ class ProductCreateView(CreateView):
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products_list')
 
+
+class ProductUpdateView(UpdateView):
+    model = Product
+    form_class = ProductForm
+    success_url = reverse_lazy('catalog:products_list')
 
 
 # def products_list(request):
