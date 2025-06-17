@@ -39,10 +39,19 @@ class ProductForm(StyleFormMixin, ModelForm):
         return description
 
     def clean_price(self):
-        price = self.cleaned_data.get('price')
+        price = self.cleaned_data['price']
         if price is not None and price <= 0:
             raise ValidationError("Цена не может быть отрицательной. Бесплатно продукты тоже не отдаем.")
         return price
+
+    def clean_photo(self):
+        photo = self.cleaned_data['photo']
+        if photo:
+            if not photo.content_type in ['photo/jpeg', 'photo/png']:
+                raise ValidationError("Загружать можно только изображения в форматах JPEG и PNG.")
+            if photo.size > 5 * 1024 * 1024:
+                raise ValidationError("Размер загружаемого изображения не должен превышать 5 МБ.")
+        return photo
 
 
 # class ContactForm(ModelForm):
