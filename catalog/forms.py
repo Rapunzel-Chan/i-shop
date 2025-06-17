@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import BooleanField
 from django.forms import ModelForm
 
-from .models import Product, Contact
+from .models import Contact, Product
 
 
 class StyleFormMixin:
@@ -40,8 +40,8 @@ class ProductForm(StyleFormMixin, ModelForm):
 
     def clean_price(self):
         price = self.cleaned_data.get('price')
-        if price is not None and price < 0:
-            raise ValidationError("Цена не может быть отрицательной.")
+        if price is not None and price <= 0:
+            raise ValidationError("Цена не может быть отрицательной. Бесплатно продукты тоже не отдаем.")
         return price
 
 

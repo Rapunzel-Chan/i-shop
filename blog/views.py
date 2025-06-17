@@ -1,18 +1,22 @@
 
 # Create your views here.
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy, reverse
-from blog.models import Blog
-from blog.forms import BlogForm
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+
+from blog.forms import BlogForm
+from blog.models import Blog
+
 
 class BlogListView(ListView):
     model = Blog
-    # template_name = 'blog/blog_list.html'
+    #template_name = 'blog/blog_list.html'
     #context_object_name = 'posts'
+
     def get_queryset(self):
         return Blog.objects.filter(is_published=True)
+
 
 class BlogDetailView(DetailView):
     model = Blog
@@ -31,14 +35,15 @@ class BlogDetailView(DetailView):
                 [settings.DEFAULT_FROM_EMAIL],
                 fail_silently=False,
             )
-
         return self.object
+
 
 class BlogCreateView(CreateView):
     model = Blog
     form_class = BlogForm
     # template_name = 'blog/blog_form.html'
     success_url = reverse_lazy('blog:blog_list')
+
 
 class BlogUpdateView(UpdateView):
     model = Blog
@@ -48,6 +53,7 @@ class BlogUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse('blog:blog_detail', args=[self.kwargs.get('pk')])
+
 
 class BlogDeleteView(DeleteView):
     model = Blog
