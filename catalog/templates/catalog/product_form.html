@@ -1,13 +1,25 @@
 {% extends "catalog/base.html" %}
 {% block content %}
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Добавить товар</h2>
+    <h2 class="text-center mb-4">
+        {% if object %}
+        Редактировать продукт
+        {% else %}
+        Добавить продукт
+        {% endif %}
+    </h2>
     <div class="row justify-content-center">
         <div class="col-md-6">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Сохранить</button>
+                <button type="submit" class="btn btn-primary">
+                    {% if object %}
+                    Сохранить
+                    {% else %}
+                    Добавить
+                    {% endif %}
+                </button>
             </form>
         </div>
     </div>
