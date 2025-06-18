@@ -45,14 +45,15 @@ class ProductForm(StyleFormMixin, ModelForm):
         return price
 
     def clean_photo(self):
-        photo = self.cleaned_data['photo']
-        if photo:
-            if not photo.content_type in ['photo/jpeg', 'photo/png']:
-                raise ValidationError("Загружать можно только изображения в форматах JPEG и PNG.")
-            if photo.size > 5 * 1024 * 1024:
-                raise ValidationError("Размер загружаемого изображения не должен превышать 5 МБ.")
+        photo = self.cleaned_data.get('photo')
+        uploaded = self.files.get('photo')
+        if uploaded:
+            content_type = uploaded.content_type
+            if content_type not in ['image/jpeg', 'image/png']:
+                raise ValidationError("Можно загружать только JPEG или PNG.")
+            if uploaded.size > 5 * 1024 * 1024:
+                raise ValidationError("Размер должен быть ≤5 МБ.")
         return photo
-
 
 # class ContactForm(ModelForm):
 #     model = Contact
