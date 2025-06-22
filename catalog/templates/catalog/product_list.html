@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <p class="card-text fw-semibold">{{ product.name }}</p>
                         <p class="card-text text-muted">{{ product.description|truncatechars:100 }}</p>
-
+                        {% if user.is_authenticated %}
                         <div class="d-flex flex-wrap gap-2 mb-2">
                             <a class="btn btn-sm btn-outline-primary"
                                href="{% url 'catalog:products_detail' product.pk %}">Посмотреть</a>
@@ -20,7 +20,7 @@
                             <a class="btn btn-sm btn-outline-danger"
                                href="{% url 'catalog:products_delete' product.pk %}">Удалить</a>
                         </div>
-
+                        {% endif %}
                         <div class="text-end">
                             <small class="text-muted">{{ product.created_at|date:"d.m.Y H:i" }}</small>
                         </div>

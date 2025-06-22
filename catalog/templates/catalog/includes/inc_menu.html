@@ -24,7 +24,9 @@
                     {% endif %}
 
                     <li><a href="/contacts/" class="text-white">Контакты</a></li>
+                    {% if user.is_authenticated %}
                     <li><a href="{% url 'catalog:products_create' %}" class="text-white">Добавить продукт</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
