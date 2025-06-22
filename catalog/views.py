@@ -1,4 +1,6 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -7,7 +9,6 @@ from django.views.generic.base import TemplateView
 
 from catalog.forms import ProductForm
 from catalog.models import Contact, Product
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -27,18 +28,18 @@ class ProductDetailView(LoginRequiredMixin, DetailView):
 class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy("catalog:products_list")
 
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy("catalog:products_list")
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
-    success_url = reverse_lazy('catalog:products_list')
+    success_url = reverse_lazy("catalog:products_list")
 
 
 # def home(request):
@@ -47,12 +48,12 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
 
 
 class ContactsView(TemplateView):
-    template_name = 'catalog/contacts.html'
+    template_name = "catalog/contacts.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         contact = Contact.objects.first()
-        context['contact'] = contact
+        context["contact"] = contact
         return context
 
     def post(self, request, *args, **kwargs):
