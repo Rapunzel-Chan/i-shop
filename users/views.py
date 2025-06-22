@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views.decorators.csrf import csrf_protect
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, DetailView
 
 from config.settings import EMAIL_HOST_USER
 from users.forms import UserRegisterForm, UserProfileForm
@@ -53,6 +53,14 @@ def email_verification(request, token):
     user.is_active = True
     user.save()
     return redirect(reverse('users:login'))
+
+
+class UserProfileView(LoginRequiredMixin, DetailView):
+    model = User
+    template_name = 'users/profile.html'
+
+    def get_object(self):
+        return self.request.user
 
 
 class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
