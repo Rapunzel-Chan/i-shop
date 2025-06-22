@@ -11,6 +11,7 @@
                     <li><a href="{% url 'catalog:products_list' %}" class="text-white">Главная</a></li>
                     {% if user.is_authenticated %}
                     <li>
+                        <a href="{% url 'users:profile_edit' %}" class="text-white">Профиль</a></li>
                         <form method="post" action="{% url 'users:logout' %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-link text-white p-0">

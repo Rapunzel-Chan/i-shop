@@ -7,6 +7,7 @@ from django.views.generic.base import TemplateView
 
 from catalog.forms import ProductForm
 from catalog.models import Contact, Product
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -19,35 +20,25 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
 
-class ProductCreateView(CreateView):
-    model = Product
-    form_class = ProductForm
-    success_url = reverse_lazy('catalog:products_list')
-
-
-class ProductUpdateView(UpdateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('catalog:products_list')
 
 
-class ProductDeleteView(DeleteView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
+    form_class = ProductForm
     success_url = reverse_lazy('catalog:products_list')
 
 
-# def products_list(request):
-#     blog = Product.objects.all()
-#     paginator = Paginator(blog, 3)
-#     page_number = request.GET.get('page')
-#     page_obj = paginator.get_page(page_number)
-#     context = {"page_obj": page_obj}
-#
-#     return render(request, 'products_list.html', context)
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:products_list')
 
 
 # def home(request):
