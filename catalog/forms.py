@@ -9,11 +9,11 @@ from .models import Contact, Product
 class StyleFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        for fild_name, fild in self.fields.items():
-            if isinstance(fild, BooleanField):
-                fild.widget.attrs["class"] = "form-check-input"
+        for field_name, field in self.fields.items():
+            if isinstance(field, forms.BooleanField):
+                field.widget.attrs["class"] = "form-check-input"
             else:
-                fild.widget.attrs["class"] = "form-control"
+                field.widget.attrs["class"] = "form-control"
 
 
 FORBIDDEN_WORDS = ["казино", "криптовалюта", "крипта", "биржа", "дешево", "бесплатно", "обман", "полиция", "радар"]
@@ -23,6 +23,10 @@ class ProductForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+        exclude = ['owner']
+        widgets = {
+            'is_published': forms.CheckboxInput(),
+        }
 
     def clean_name(self):
         name = self.cleaned_data["name"]
