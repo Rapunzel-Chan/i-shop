@@ -1,7 +1,7 @@
 # Create your views here.
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
@@ -14,7 +14,7 @@ from blog.models import Blog
 
 class ContentManagerRequiredMixin(UserPassesTestMixin):
     def test_func(self):
-        return self.request.user.groups.filter(name='Контент-менеджер').exists()
+        return self.request.user.groups.filter(name="Контент-менеджер").exists()
 
 
 class BlogListView(ListView):
@@ -49,7 +49,7 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(LoginRequiredMixin, ContentManagerRequiredMixin,  CreateView):
+class BlogCreateView(LoginRequiredMixin, ContentManagerRequiredMixin, CreateView):
     model = Blog
     form_class = BlogForm
     # template_name = 'blog/blog_form.html'
@@ -73,7 +73,7 @@ class BlogDeleteView(LoginRequiredMixin, ContentManagerRequiredMixin, DeleteView
 
 
 class UnpublishBlogView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'blog.can_unpublish_blog'
+    permission_required = "blog.can_unpublish_blog"
     raise_exception = True
 
     def post(self, request, pk, *args, **kwargs):
@@ -84,5 +84,4 @@ class UnpublishBlogView(LoginRequiredMixin, PermissionRequiredMixin, View):
             messages.success(request, f"Публикация блога «{blog.title}» отменена.")
         else:
             messages.info(request, f"Блог «{blog.title}» уже не опубликован.")
-        return redirect(reverse_lazy('blog:blog_detail', kwargs={'pk': pk}))
-
+        return redirect(reverse_lazy("blog:blog_detail", kwargs={"pk": pk}))

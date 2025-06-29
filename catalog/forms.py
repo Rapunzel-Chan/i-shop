@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import BooleanField
+# from django.db.models import BooleanField
 from django.forms import ModelForm
 
 from .models import Contact, Product
@@ -23,9 +23,9 @@ class ProductForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
-        exclude = ['owner']
+        exclude = ["owner"]
         widgets = {
-            'is_published': forms.CheckboxInput(),
+            "is_published": forms.CheckboxInput(),
         }
 
     def clean_name(self):
@@ -58,7 +58,6 @@ class ProductForm(StyleFormMixin, ModelForm):
             if uploaded.size > 5 * 1024 * 1024:
                 raise ValidationError("Размер должен быть ≤5 МБ.")
         return photo
-
 
 
 # class ContactForm(ModelForm):

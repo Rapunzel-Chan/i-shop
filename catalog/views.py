@@ -1,13 +1,14 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.base import TemplateView
-from django.views import View
+
 from catalog.forms import ProductForm
 from catalog.models import Contact, Product
-from django.shortcuts import get_object_or_404, redirect
 
 
 class ProductListView(ListView):
@@ -21,7 +22,7 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
-        if user.is_authenticated and user.has_perm('catalog.can_unpublish_product'):
+        if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
             return Product.objects.all()
         elif user.is_authenticated:
             return Product.objects.filter(Q(is_published=True) | Q(owner=user))
@@ -56,7 +57,7 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         product = self.get_object()
         user = self.request.user
-        return user == product.owner or user.groups.filter(name='Модератор продуктов').exists()
+        return user == product.owner or user.groups.filter(name="Модератор продуктов").exists()
 
 
 # def home(request):
@@ -86,7 +87,7 @@ class ContactsView(TemplateView):
 
 
 class UnpublishProductView(LoginRequiredMixin, PermissionRequiredMixin, View):
-    permission_required = 'catalog.can_unpublish_product'
+    permission_required = "catalog.can_unpublish_product"
     raise_exception = True
 
     def post(self, request, pk, *args, **kwargs):
@@ -97,4 +98,4 @@ class UnpublishProductView(LoginRequiredMixin, PermissionRequiredMixin, View):
             messages.success(request, f"Публикация продукта «{product.name}» отменена.")
         else:
             messages.info(request, f"Продукт «{product.name}» уже не опубликован.")
-        return redirect(reverse_lazy('catalog:products_detail', kwargs={'pk': pk}))
+        return redirect(reverse_lazy("catalog:products_detail", kwargs={"pk": pk}))

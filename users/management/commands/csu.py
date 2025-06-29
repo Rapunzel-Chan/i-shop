@@ -1,7 +1,7 @@
-from django.core.management import BaseCommand
 from django.conf import settings
-from users.models import User
+from django.core.management import BaseCommand
 
+from users.models import User
 
 # class Command(BaseCommand):
 #     def handle(self, *args, **options):
@@ -14,11 +14,11 @@ from users.models import User
 #             user.set_password(password)
 #             user.save()
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
         user, created = User.objects.get_or_create(
-            email="admin@example.com",
-            defaults={'is_active': True, 'is_staff': True, 'is_superuser': True}
+            email="admin@example.com", defaults={"is_active": True, "is_staff": True, "is_superuser": True}
         )
         if created:
             user.set_password(settings.ADMIN_PASSWORD)

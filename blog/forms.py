@@ -8,7 +8,7 @@ class BlogForm(forms.ModelForm):
         model = Blog
         fields = ["title", "content", "preview", "is_published"]
         widgets = {
-            'is_published': forms.CheckboxInput(),
+            "is_published": forms.CheckboxInput(),
         }
 
     def __init__(self, *args, **kwargs):
