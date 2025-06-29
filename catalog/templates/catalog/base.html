@@ -160,8 +160,10 @@
                 <p>
                     <a href="{% url 'blog:blog_list' %}" class="btn btn-primary my-2">Перейти в блог</a>
                     <a href="#" class="btn btn-secondary my-2">Поиск</a>
+                    {% if user.is_authenticated %}
                     <a class="btn btn-primary" href="{% url 'catalog:products_create' %}" role="button">Добавить
                         продукт</a>
+                    {% endif %}
                 </p>
             </div>
         </div>
