@@ -15,10 +15,21 @@
                         <div class="d-flex flex-wrap gap-2 mb-2">
                             <a class="btn btn-sm btn-outline-primary"
                                href="{% url 'catalog:products_detail' product.pk %}">Посмотреть</a>
+
+                            {% if user == product.owner %}
                             <a class="btn btn-sm btn-outline-secondary"
                                href="{% url 'catalog:products_update' product.pk %}">Редактировать</a>
+                            {% endif %}
+
+                            {% if user == product.owner or perms.catalog.delete_product %}
                             <a class="btn btn-sm btn-outline-danger"
                                href="{% url 'catalog:products_delete' product.pk %}">Удалить</a>
+                            {% endif %}
+
+                            {% if perms.catalog.can_unpublish_product and product.is_published %}
+                            <a class="btn btn-sm btn-warning"
+                               href="{% url 'catalog:products_unpublish' product.pk %}">Снять с публикации</a>
+                            {% endif %}
                         </div>
                         {% endif %}
                         <div class="text-end">
