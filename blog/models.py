@@ -20,6 +20,9 @@ class Blog(models.Model):
         verbose_name = "Блог"
         verbose_name_plural = "Блоги"
         ordering = ["-created_at"]
+        permissions = [
+            ("can_unpublish_blog", "Can unpublish blog"),
+        ]
 
     def __str__(self):
         return self.title

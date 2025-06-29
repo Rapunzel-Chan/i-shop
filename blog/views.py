@@ -1,11 +1,20 @@
 # Create your views here.
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.contrib import messages
 from django.core.mail import send_mail
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from blog.forms import BlogForm
 from blog.models import Blog
+
+
+class ContentManagerRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.groups.filter(name='Контент-менеджер').exists()
 
 
 class BlogListView(ListView):
@@ -14,6 +23,9 @@ class BlogListView(ListView):
     # context_object_name = 'posts'
 
     def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.groups.filter(name="Контент-менеджер").exists():
+            return Blog.objects.all()
         return Blog.objects.filter(is_published=True)
 
 
@@ -37,14 +49,14 @@ class BlogDetailView(DetailView):
         return self.object
 
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, ContentManagerRequiredMixin,  CreateView):
     model = Blog
     form_class = BlogForm
     # template_name = 'blog/blog_form.html'
     success_url = reverse_lazy("blog:blog_list")
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(LoginRequiredMixin, ContentManagerRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
     # template_name = 'blog/blog_form.html'
@@ -54,7 +66,23 @@ class BlogUpdateView(UpdateView):
         return reverse("blog:blog_detail", args=[self.kwargs.get("pk")])
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(LoginRequiredMixin, ContentManagerRequiredMixin, DeleteView):
     model = Blog
     # template_name = 'blog/blog_confirm_delete.html'
     success_url = reverse_lazy("blog:blog_list")
+
+
+class UnpublishBlogView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = 'blog.can_unpublish_blog'
+    raise_exception = True
+
+    def post(self, request, pk, *args, **kwargs):
+        blog = get_object_or_404(Blog, pk=pk)
+        if blog.is_published:
+            blog.is_published = False
+            blog.save()
+            messages.success(request, f"Публикация блога «{blog.title}» отменена.")
+        else:
+            messages.info(request, f"Блог «{blog.title}» уже не опубликован.")
+        return redirect(reverse_lazy('blog:blog_detail', kwargs={'pk': pk}))
+

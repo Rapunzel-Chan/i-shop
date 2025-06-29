@@ -1,6 +1,6 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.base import TemplateView
@@ -22,13 +22,10 @@ class ProductListView(ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated and user.has_perm('catalog.can_unpublish_product'):
-            # Админ — видит всё
             return Product.objects.all()
         elif user.is_authenticated:
-            # Автор — видит свои + опубликованные
             return Product.objects.filter(Q(is_published=True) | Q(owner=user))
         else:
-            # Аноним — только опубликованные
             return Product.objects.filter(is_published=True)
 
 
@@ -52,9 +49,14 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("catalog:products_list")
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:products_list")
+
+    def test_func(self):
+        product = self.get_object()
+        user = self.request.user
+        return user == product.owner or user.groups.filter(name='Модератор продуктов').exists()
 
 
 # def home(request):
