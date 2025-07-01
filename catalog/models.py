@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 # Create your models here.
 
 
@@ -38,11 +40,25 @@ class Product(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True, verbose_name="Дата последнего изменения", help_text="Введите дату последнего изменения продукта"
     )
+    is_published = models.BooleanField(
+        default=False, verbose_name="Опубликовано", help_text="Укажите, опубликован ли продукт"
+    )
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Владелец",
+        help_text="Укажите владельца продукта",
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
 
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["category", "name"]
+        permissions = [
+            ("can_unpublish_product", "Can unpublish product"),
+        ]
 
     def __str__(self):
         return self.name

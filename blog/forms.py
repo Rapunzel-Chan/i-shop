@@ -7,6 +7,9 @@ class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
         fields = ["title", "content", "preview", "is_published"]
+        widgets = {
+            "is_published": forms.CheckboxInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

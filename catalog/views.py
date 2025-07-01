@@ -1,9 +1,9 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
-
-# from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import redirect
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.base import TemplateView
 
@@ -20,6 +20,15 @@ class ProductListView(ListView):
         context = super().get_context_data(**kwargs)
         return context
 
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
+            return Product.objects.all()
+        elif user.is_authenticated:
+            return Product.objects.filter(Q(is_published=True) | Q(owner=user))
+        else:
+            return Product.objects.filter(is_published=True)
+
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
@@ -30,6 +39,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:products_list")
 
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
@@ -37,9 +50,14 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("catalog:products_list")
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:products_list")
+
+    def test_func(self):
+        product = self.get_object()
+        user = self.request.user
+        return user == product.owner or user.groups.filter(name="Модератор продуктов").exists()
 
 
 # def home(request):
@@ -66,3 +84,18 @@ class ContactsView(TemplateView):
             messages.success(request, "Спасибо! Ваше сообщение успешно отправлено.")
 
         return redirect(reverse_lazy("catalog:contacts"))
+
+
+class UnpublishProductView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = "catalog.can_unpublish_product"
+    raise_exception = True
+
+    def post(self, request, pk, *args, **kwargs):
+        product = get_object_or_404(Product, pk=pk)
+        if product.is_published:
+            product.is_published = False
+            product.save()
+            messages.success(request, f"Публикация продукта «{product.name}» отменена.")
+        else:
+            messages.info(request, f"Продукт «{product.name}» уже не опубликован.")
+        return redirect(reverse_lazy("catalog:products_detail", kwargs={"pk": pk}))
