@@ -9,6 +9,7 @@ from django.views.generic.base import TemplateView
 
 from catalog.forms import ProductForm
 from catalog.models import Contact, Product
+from catalog.services import get_products_from_cache
 
 
 class ProductListView(ListView):
@@ -23,7 +24,7 @@ class ProductListView(ListView):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated and user.has_perm("catalog.can_unpublish_product"):
-            return Product.objects.all()
+            return get_products_from_cache()
         elif user.is_authenticated:
             return Product.objects.filter(Q(is_published=True) | Q(owner=user))
         else:
