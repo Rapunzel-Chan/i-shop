@@ -1,9 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
-# from django.db.models import BooleanField
 from django.forms import ModelForm
 
-from .models import Contact, Product
+from .models import Product
 
 
 class StyleFormMixin:
@@ -58,12 +57,3 @@ class ProductForm(StyleFormMixin, ModelForm):
             if uploaded.size > 5 * 1024 * 1024:
                 raise ValidationError("Размер должен быть ≤5 МБ.")
         return photo
-
-
-# class ContactForm(ModelForm):
-#     model = Contact
-#     fields = ["name", "phone", "message"]
-#     widgets = {
-# #     name: forms.CharField(max_length=100)
-# #     phone = forms.CharField(max_length=15)
-# #     message = forms.CharField(widget=forms.Textarea)

@@ -3,17 +3,6 @@ from django.core.management import BaseCommand
 
 from users.models import User
 
-# class Command(BaseCommand):
-#     def handle(self, *args, **options):
-#         password = settings.ADMIN_PASSWORD
-#         user = User.objects.create(email="admin@example.com")
-#         user.is_active = True
-#         user.is_staff = True
-#         user.is_superuser = True
-#         if created:
-#             user.set_password(password)
-#             user.save()
-
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
