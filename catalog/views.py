@@ -8,8 +8,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from django.views.generic.base import TemplateView
 
 from catalog.forms import ProductForm
-from catalog.models import Contact, Product
-from catalog.services import get_products_from_cache
+from catalog.models import Contact, Product, Category
+from catalog.services import get_products_from_cache, get_products_by_category_id
 
 
 class ProductListView(ListView):
@@ -19,6 +19,8 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['category'] = None
+        context['all_categories'] = Category.objects.all()
         return context
 
     def get_queryset(self):
@@ -29,6 +31,29 @@ class ProductListView(ListView):
             return Product.objects.filter(Q(is_published=True) | Q(owner=user))
         else:
             return Product.objects.filter(is_published=True)
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'catalog/category_list.html'
+    context_object_name = 'categories'
+
+
+class ProductCategoryListView(ListView):
+    model = Product
+    template_name = 'catalog/products_by_category.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        category_id = self.kwargs.get('category_id')
+        return Product.objects.filter(category_id=category_id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.kwargs.get('category_id')
+        context['category'] = get_object_or_404(Category, pk=category_id)
+        context['all_categories'] = Category.objects.all()
+        return context
 
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
