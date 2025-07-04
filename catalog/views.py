@@ -8,8 +8,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from django.views.generic.base import TemplateView
 
 from catalog.forms import ProductForm
-from catalog.models import Contact, Product, Category
-from catalog.services import get_products_from_cache, get_products_by_category_id
+from catalog.models import Category, Contact, Product
+from catalog.services import get_products_by_category_id, get_products_from_cache
 
 
 class ProductListView(ListView):
@@ -19,8 +19,8 @@ class ProductListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['category'] = None
-        context['all_categories'] = Category.objects.all()
+        context["category"] = None
+        context["all_categories"] = Category.objects.all()
         return context
 
     def get_queryset(self):
@@ -35,24 +35,24 @@ class ProductListView(ListView):
 
 class CategoryListView(ListView):
     model = Category
-    template_name = 'catalog/category_list.html'
-    context_object_name = 'categories'
+    template_name = "catalog/category_list.html"
+    context_object_name = "categories"
 
 
 class ProductCategoryListView(ListView):
     model = Product
-    template_name = 'catalog/products_by_category.html'
-    context_object_name = 'products'
+    template_name = "catalog/products_by_category.html"
+    context_object_name = "products"
 
     def get_queryset(self):
-        category_id = self.kwargs.get('category_id')
+        category_id = self.kwargs.get("category_id")
         return Product.objects.filter(category_id=category_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        category_id = self.kwargs.get('category_id')
-        context['category'] = get_object_or_404(Category, pk=category_id)
-        context['all_categories'] = Category.objects.all()
+        category_id = self.kwargs.get("category_id")
+        context["category"] = get_object_or_404(Category, pk=category_id)
+        context["all_categories"] = Category.objects.all()
         return context
 
 
@@ -84,11 +84,6 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         product = self.get_object()
         user = self.request.user
         return user == product.owner or user.groups.filter(name="Модератор продуктов").exists()
-
-
-# def home(request):
-#     latest_products = Product.objects.all().order_by("-created_at")[:5]
-#     return render(request, "home.html", {"latest_products": latest_products})
 
 
 class ContactsView(TemplateView):

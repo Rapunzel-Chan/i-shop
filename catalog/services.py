@@ -8,7 +8,7 @@ def get_products_from_cache():
     """Функция сервисного слова для запроса списка продуктов из кэша"""
     if not CACHE_ENABLED:
         return Product.objects.all()
-    key = 'product_list'
+    key = "product_list"
     products = cache.get(key)
     if products is not None:
         return products
