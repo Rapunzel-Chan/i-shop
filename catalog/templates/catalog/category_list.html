@@ -1,0 +1,17 @@
+{% extends 'catalog/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="text-center mb-4">Выбор категории</h1>
+  <div class="row justify-content-center gx-3 gy-3">
+    {% for category in categories %}
+    <div class="col-6 col-sm-4 col-md-3">
+      <a href="{% url 'catalog:products_by_category' category.id %}" class="btn btn-outline-primary w-100 py-3">
+        {{ category.name }}
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
